@@ -38,7 +38,7 @@ connectToDb();
 // using middlewares
 app.use(
   cors({
-    origin: '*',
+    origin: [/.*\.vercel\.app$/, /http:\/\/localhost:\d+$/],
     credentials: true,
   })
 );
