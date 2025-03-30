@@ -84,6 +84,7 @@ exports.getAllProducts = catchAsyncError(async (req, res) => {
       price,
       images,
       colors,
+      sizes,
       company,
       description,
       category,
@@ -95,8 +96,9 @@ exports.getAllProducts = catchAsyncError(async (req, res) => {
       id,
       name,
       price,
-      image: images[0].url,
+      images,
       colors,
+      sizes,
       company,
       description,
       category,
@@ -121,9 +123,23 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
   if (!product) {
     return next(new ErrorHandler('Product Not Found', 200));
   }
+  const newProduct = {
+    id: product._id,
+    name: product.name,
+    price: product.price,
+    images: product.images,
+    colors: product.colors,
+    sizes: product.sizes,
+    company: product.company,
+    description: product.description,
+    category: product.category,
+    stock: product.stock,
+    shipping: product.shipping,
+  }
+
   res.status(200).json({
     success: true,
-    data: product,
+    data: newProduct,
   });
 });
 
