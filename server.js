@@ -38,7 +38,7 @@ connectToDb();
 // using middlewares
 app.use(
   cors({
-    origin: [/varuntiwari\.com$/, /netlify\.app$/, /localhost:\d{4}$/],
+    origin: '*',
     credentials: true,
   })
 );
