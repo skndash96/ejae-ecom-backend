@@ -49,10 +49,13 @@ const orderSchema = mongoose.Schema({
         type: Number,
         required: true,
       },
-      // image: {
-      //   type: String,
-      //   required: true,
-      // },
+      images: {
+        type: [{
+          public_id: String,
+          url: String,
+        }],
+        required: true,
+      },
       color: {
         type: String,
         required: true,
@@ -110,7 +113,7 @@ const orderSchema = mongoose.Schema({
   orderStatus: {
     type: String,
     required: true,
-    default: 'processing',
+    default: 'pending',
   },
   deliveredAt: Date,
   createdAt: {
