@@ -76,7 +76,18 @@ exports.deleteProduct = catchAsyncError(async (req, res, next) => {
 
 // send all product details
 exports.getAllProducts = catchAsyncError(async (req, res) => {
-  const products = await Product.find();
+  const q = new URLSearchParams(req.url.split('?').pop())
+  
+  const category = q.get('category')
+
+  let products
+
+  if (category) {
+    products = await Product.find({ category: { $regex: new RegExp(category, 'i') } }).sort({ createdAt: -1 })
+  } else {
+    products = await Product.find().sort({ createdAt: -1 })
+  }
+  
   const data = products.map((item, index) => {
     const {
       _id: id,

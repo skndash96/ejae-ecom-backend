@@ -57,7 +57,7 @@ exports.getUserOrders = catchAsyncError(async (req, res, next) => {
   if (!email) {
     return next(new ErrorHandler('Order not found', 400));
   }
-  const order = await Order.find({ 'user.email': email });
+  const order = await Order.find({ 'user.email': email }).sort({ createdAt: -1 });
   if (!order) {
     return next(new ErrorHandler('Order not found', 200));
   }
