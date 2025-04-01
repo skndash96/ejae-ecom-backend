@@ -118,7 +118,7 @@ const orderSchema = mongoose.Schema({
   deliveredAt: Date,
   createdAt: {
     type: Date,
-    default: Date.now(),
+    required: true
   },
 });
 

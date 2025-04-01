@@ -27,7 +27,8 @@ exports.createNewOrder = catchAsyncError(async (req, res, next) => {
     taxPrice,
     shippingPrice,
     totalPrice,
-    paidAt: Date.now(),
+    paidAt: null,
+    createdAt: new Date(),
     user,
   });
   res.status(200).json({
