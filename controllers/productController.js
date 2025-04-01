@@ -166,6 +166,7 @@ exports.createProductReview = catchAsyncError(async (req, res, next) => {
     email,
     rating: Number(rating),
     comment,
+    createdAt: new Date()
   };
   const product = await Product.findById(productId);
   // check if the user already reviewed
@@ -178,6 +179,7 @@ exports.createProductReview = catchAsyncError(async (req, res, next) => {
         rev.name = name;
         rev.rating = rating;
         rev.comment = comment;
+        rev.createdAt = new Date()
       }
     });
   } else {
@@ -205,7 +207,9 @@ exports.getAllReviews = catchAsyncError(async (req, res, next) => {
   if (!req.params.id) {
     return next(new ErrorHandler('Product not found', 400));
   }
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).sort({
+    createdAt: -1
+  });
   if (!product) {
     return next(new ErrorHandler('Product not found', 200));
   }
