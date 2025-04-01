@@ -1,31 +1,71 @@
 const Razorpay = require('razorpay');
-const crypto = require('crypto');
+const Order = require('../models/orderModel');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_SECRET_KEY,
 });
 
-const calculateOrderAmount = (shipping_fee, total_amount) => {
-  return shipping_fee + total_amount;
-};
+const verifyOrder = async (req, res) => {
+  const { orderId } = req.body
 
-const paymentController = async (req, res) => {
-  const { cart, shipping_fee, total_amount, shipping } = req.body;
+  try {
+    const order = await Order.findById(orderId)
+  
+    if (!order) {
+      return res.status(400).json({
+        success: false,
+        message: "Order doesn't exist"
+      })
+    }
+  
+    const razorPayOrderId = order.paymentInfo.id
+  
+    const rzOrder = await razorpay.orders.fetch(razorPayOrderId)
+    
+    if (rzOrder.status === "paid") {
+      await Order.findByIdAndUpdate(orderId, {
+        "paymentInfo.status": "paid"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        amount: rzOrder.amount,
+        currency: rzOrder.currency,
+        attempts: rzOrder.attempts,
+        status: rzOrder.status
+      }
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+const createPaymentIntent = async (req, res) => {
+  const { cart, totalPrice } = req.body;
 
   try {
     const options = {
-      amount: calculateOrderAmount(shipping_fee, total_amount) * 100, // Convert to paisa
+      amount: totalPrice, //in paisa
       currency: 'INR',
       receipt: `receipt_${Date.now()}`,
-      notes: { shipping },
+      notes: { cart },
     };
 
     const order = await razorpay.orders.create(options);
+
     return res.status(200).json({
-      order_id: order.id,
-      amount: order.amount,
-      currency: order.currency,
+      data: {
+        orderId: order.id,
+        amount: order.amount,
+        currency: order.currency,
+      },
+      success: true
     });
   } catch (error) {
     return res.status(500).json({
@@ -34,4 +74,7 @@ const paymentController = async (req, res) => {
   }
 };
 
-module.exports = paymentController;
+module.exports = {
+  verifyOrder,
+  createPaymentIntent
+};

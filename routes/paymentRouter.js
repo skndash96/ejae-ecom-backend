@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const paymentController = require('../controllers/paymentController');
 
-// creating client secret
-router.post('/create-payment-intent', paymentController);
+router.post('/create-payment-intent', paymentController.createPaymentIntent);
+router.post('/verify', paymentController.verifyOrder)
 
 module.exports = router;
