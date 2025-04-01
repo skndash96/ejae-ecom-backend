@@ -138,6 +138,8 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
     id: product._id,
     name: product.name,
     price: product.price,
+    rating: product.rating,
+    numberOfReviews: product.numberOfReviews,
     images: product.images,
     colors: product.colors,
     sizes: product.sizes,
