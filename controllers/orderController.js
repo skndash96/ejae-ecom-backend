@@ -21,7 +21,7 @@ exports.createNewOrder = catchAsyncError(async (req, res, next) => {
     orderItems,
     paymentInfo: {
       ...paymentInfo,
-      status: 'pending', // payment status is always pending on creation. update on payment success (from payment gateway provider)
+      status: 'processing', // payment status is always pending on creation. update on payment success (from payment gateway provider)
     },
     itemsPrice,
     taxPrice,
