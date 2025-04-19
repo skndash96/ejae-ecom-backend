@@ -2,6 +2,16 @@ const Product = require('../models/productModel');
 const ErrorHandler = require('../utils/ErrorHandler');
 const catchAsyncError = require('../middleware/CatchAsyncErrors');
 const cloudinary = require('../config/cloudinary');
+const { categories } = require('../constants/categories');
+
+// Get all categories
+exports.getAllCategories = catchAsyncError(async (req, res) => {
+  res.set('Cache-Control', 'public, max-age=768000, immutable');
+  res.status(200).json({
+    success: true,
+    data: categories,
+  });
+})
 
 // create a new product
 exports.createProduct = catchAsyncError(async (req, res, next) => {

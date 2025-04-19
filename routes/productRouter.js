@@ -2,6 +2,9 @@ const router = require('express').Router();
 
 const productController = require('../controllers/productController');
 
+// get all categories
+router.route('/categories').get(productController.getAllCategories);
+
 // send all product detaisl
 router.route('/').get(productController.getAllProducts);
 
