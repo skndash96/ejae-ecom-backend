@@ -1,3 +1,6 @@
+// Do not change category names
+// This file contains the categories and their respective images and starting prices
+
 exports.categories = [
   {
     imageUrl: "/images/apparel/hoodies.png",
